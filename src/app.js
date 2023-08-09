@@ -10,13 +10,13 @@ import { MsgModel } from "./DAO/models/msgs.model.js";
 import {__dirname} from "./utils.js"
 import http from 'http'
 import { connectMongo } from "./utils/connect-db.js";
-import { loginRouter } from "./routes/login.router.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import { initializePassport } from "./config/passport.config.js";
 import passport from "passport";
 import { ent } from "./config.js";
+import { loginRouter } from "./routes/login.router.js";
 
 const app = express();
 const port = ent.PORT;

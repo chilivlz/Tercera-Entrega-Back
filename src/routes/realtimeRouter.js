@@ -60,8 +60,12 @@ routerRealTime.get("/realtimeproducts", async (req, res) => {
 });
 
 // .......................... REGISTER .................:///   Esto es lo que me aparece Cannot POST /api/sessions/register
-loginRouter.get("/login",registerController.get)
-loginRouter.post("/login",passport.authenticate("register", { failureRedirect: "api/sessions/failregister"}), registerController.post)
+routerRealTime.get("/register", registerController.get);
+
+routerRealTime.post("/register", passport.authenticate("register", {failureRedirect: "/api/sessions/failregister"}), registerController.post);
+
+    
+
 
 //.......................LOGIN-ONE.......................//
 
