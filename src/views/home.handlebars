@@ -1,0 +1,13 @@
+<div class="bg-primary bg-gradient text-white"> 
+  <h1>Home Products</h1>
+  {{#each mapAllproducts}}
+    <div style="width: 250px; padding: 15px; border: solid 3px; margin: 15px;">
+      <p>{{this.name}}</p>
+
+      <p>{{this.description}}</p>
+
+      <p>{{this.price}}</p>
+
+    </div>
+  {{/each}}
+</div>

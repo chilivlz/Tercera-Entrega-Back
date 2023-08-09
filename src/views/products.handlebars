@@ -1,0 +1,36 @@
+<div class="main">
+  <h1>Welcome {{session.sessionDataName}}, eres un {{session.sessionAuth}}!</h1>
+
+  <a href="/logout" class="logOut">LogOut</a>
+
+  <div class="shop">
+{{#each products}}
+  <div class='cardList'>
+    
+      <div class='card'>
+        <h3 class='productTitle'>{{this.name}}</h3>
+        <ul style='list-style: none;'>
+          <li class='productDescription'>{{this.description}}</li>
+          <li class='productPrice'>{{this.price}}$</li>
+        </ul>
+        <div class='addToCart'>
+          <button class='addToCart-btn' data-product-id='{{this._id}}'>Add to cart</button>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+</div>
+<div id='pagination' class="botonera">
+  {{#if hasPrevPage}}
+    <a href={{prevPage}}><ion-icon name='chevron-back-outline'></ion-icon></a>
+  {{/if}}
+  <select name='pageSelector' id='paageSelect' class='page-select'>
+    {{#each totalPages}}
+      <option value='{{this}}'>{{this}}</option>
+    {{/each}}
+  </select>
+  {{#if hasNextPage}}
+    <a href={{nextPage}}><ion-icon name='chevron-forward-outline'></ion-icon></a>
+  {{/if}}
+</div>
+
