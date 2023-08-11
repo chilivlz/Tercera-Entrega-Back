@@ -16,7 +16,7 @@ import MongoStore from "connect-mongo";
 import { initializePassport } from "./config/passport.config.js";
 import passport from "passport";
 import { ent } from "./config.js";
-import { loginRouter } from "./routes/login.router.js";
+
 
 const app = express();
 const port = ent.PORT;

@@ -3,7 +3,7 @@ class RegisterController{
     return res.render("register", {});
   }
 
-  async post(req,res){
+  async postSesh(req,res){
     if (!req.user) {
         return res.json({ error: "something went wrong" });
   
