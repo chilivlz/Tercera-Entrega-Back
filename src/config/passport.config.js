@@ -1,7 +1,7 @@
 import passport from "passport";
 import local from "passport-local";
 import { createHash, isValidPassword } from "../utils/bcrypt.js";
-import { userModel } from "../DAO/models/users.model.js";
+import { userModel } from "../DAO/mongo/models/users.model.js";
 const LocalStrategy = local.Strategy;
 import GitHubStrategy from "passport-github2";
 import fetch from "node-fetch";

@@ -1,12 +1,12 @@
-import { productsModel } from "../DAO/models/products.model.js";
+import { productsModel } from "../DAO/mongo/models/products.model.js";
 
-export class ProductManagerMongo {
+export class ProductService {
   constructor() {}
 
   addProduct(addedProduct) {
     return new Promise((resolve, reject) => {
       const product = {
-        name: addedProduct.name,
+        title: addedProduct.title,
         description: addedProduct.description,
         price: addedProduct.price,
         stock: addedProduct.stock,

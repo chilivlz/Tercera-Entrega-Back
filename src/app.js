@@ -2,11 +2,11 @@
 import express from "express";
 import handlesbars from "express-handlebars";
 import { Server } from "socket.io";
-import { cartsRouter } from "./routes/carts.router.js";
-import { productManagerRouter } from "./routes/products.router.js";
-import {routerRealTime} from "./routes/realtimeRouter.js";
-import { ProductManagerMongo } from "./services/products.service.js";
-import { MsgModel } from "./DAO/models/msgs.model.js";
+import { cartsRouter } from "./routes/carts.routes.js";
+import { productManagerRouter } from "./routes/products.routes.js";
+import {viewsRouter} from "./routes/view.routes.js";
+//import { ProductManagerMongo } from "./services/products.service.js";
+import { MsgModel } from "./DAO/mongo/models/msgs.model.js";
 import {__dirname} from "./utils.js"
 import http from 'http'
 import { connectMongo } from "./utils/connect-db.js";
@@ -39,7 +39,7 @@ export const io = new Server (server);
 
 
 app.use(express.urlencoded({ extended: true }));
-const productManager = new ProductManagerMongo();
+//const productManager = new ProductManagerMongo();
 
 const httpServer = app.listen(port, () => {
   console.log(`Server running on port http://localhost:${port}`);
@@ -55,7 +55,7 @@ app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 app.use( express.static(__dirname +"/public"));
 
-app.use("/", routerRealTime)
+app.use("/", viewsRouter)
 
 socketServer.on("connection", async (socket) => {
   console.log("New Client connected");
@@ -85,7 +85,7 @@ app.use(passport.session());
 
 app.use("/api/products", productManagerRouter);
 app.use("/api/carts", cartsRouter);
-app.use("/api/sessions", routerRealTime); // aca modifique la ruta//
+app.use("/api/sessions", viewsRouter); // aca modifique la ruta//
 
 app.use("/api/sessions/current", (req,res)=>{   
   console.log(req.session.user)  
