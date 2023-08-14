@@ -1,6 +1,6 @@
 import { productsModel } from "./models/products.model.js";
 
-export class ProductDao {
+ export class ProductDao {
   constructor() {}
 
   async addProduct(product) {
@@ -33,3 +33,5 @@ export class ProductDao {
     return deletedProduct;
   }
 }
+
+

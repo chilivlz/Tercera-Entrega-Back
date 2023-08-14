@@ -1,12 +1,41 @@
-import { productsModel } from "../DAO/mongo/models/products.model.js";
-
 export class ProductService {
-  constructor() {}
+  constructor(dao) {
+    this.dao = dao;
+  }
 
-  addProduct(addedProduct) {
-    return new Promise((resolve, reject) => {
+  #validateStringField(key, product) {
+    if (!product[key]) {
+      throw new Error(`Error: Field ${key} is required`);
+    } else if (
+      product[key] === "" ||
+      product[key] === undefined ||
+      product[key] === null ||
+      typeof product[key] !== "string"
+    ) {
+      throw new Error(`Error: Field ${key} is invalid`);
+    } else {
+      return true;
+    }
+  }
+
+  #validateNumberField(key, product) {
+    if (product[key] === undefined) {
+      throw new Error(`Error: Field ${key} is required`);
+    } else if (
+      product[key] === NaN ||
+      product[key] === null ||
+      product[key] < 0
+    ) {
+      throw new Error(`Error: Field ${key} is invalid`);
+    } else {
+      return true;
+    }
+  }
+
+  async addProduct(addedProduct) {
+    try {
       const product = {
-        title: addedProduct.title,
+        name: addedProduct.name,
         description: addedProduct.description,
         price: addedProduct.price,
         stock: addedProduct.stock,
@@ -16,84 +45,99 @@ export class ProductService {
         category: addedProduct.category,
       };
 
-      productsModel
-        .create(product)
-        .then((newProduct) => {
-          resolve(newProduct);
-        })
-        .catch((error) => {
-          if (error.code === 11000) {
-            console.log(error);
-            reject(new Error('El campo "code" ya existe en la base de datos.'));
-          } else {
-            reject(error);
-          }
-        });
-    });
-  }
+      const newProduct = await this.dao.addProduct(product);
 
-  getProducts(limit = 10, page, sort, query) {
-    const filter = {};
-
-    if (query) {
-      filter.category = query;
+      return newProduct;
+    } catch (error) {
+      if (error.code === 11000) {
+        console.log(error);
+        throw new Error('El campo "code" ya existe en la base de datos.');
+      } else {
+        throw new Error(error);
+      }
     }
-
-    const options = {
-      page: page || 1,
-      limit: limit || 10,
-      sort: sort ? { price: sort === "asc" ? 1 : -1 } : undefined,
-    };
-
-    return productsModel.paginate(filter, options);
   }
 
-  getProductById(id) {
-    return new Promise((resolve, reject) => {
-      productsModel
-        .findById(id)
-        .then((result) => {
-          if (result) {
-            resolve(result);
-          } else {
-            reject(new Error("Product not found"));
-          }
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
-  }
+  async getProducts({ limit = 10, page, sort, query }) {
+    try {
+      const filter = {};
 
-  
-
-  updateProduct(id, product) {
-    return new Promise((resolve, reject) => {
-      if (product.code) {
-        reject(new Error("Code cant be modified"));
+      if (query) {
+        filter.category = query;
       }
 
-      productsModel
-        .findByIdAndUpdate(id, product)
-        .then((result) => {
-          resolve(result);
-        })
-        .catch((error) => {
-          reject(new Error("Product not found"));
-        });
-    });
+      const options = {
+        page: page || 1,
+        limit: limit || 10,
+        sort: sort ? { price: sort === "asc" ? 1 : -1 } : undefined,
+      };
+
+      const allProducts = this.dao.getProducts(filter, options);
+
+      return allProducts;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
-  deleteProduct(id) {
-    return new Promise((resolve, reject) => {
-      productsModel
-        .findByIdAndDelete(id)
-        .then((result) => {
-          resolve(result);
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
+  async getProductById(id) {
+    try {
+      const foundProduct = await this.dao.getProductById(id);
+
+      return foundProduct;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async updateProduct(id, product) {
+    try {
+      if (product.code) {
+        throw new Error("Code cant be modified");
+      }
+
+      let newProductFields = Object.keys(product);
+
+      newProductFields.forEach((field) => {
+        if (
+          field === "name" ||
+          field === "description" ||
+          field === "price" ||
+          field === "thumbnail" ||
+          field === "code" ||
+          field === "stock"
+        ) {
+          if (
+            field === "name" ||
+            field === "description" ||
+            field === "thumbnail" ||
+            field === "code"
+          ) {
+            this.#validateStringField(field, product);
+          }
+
+          if (field === "price" || field === "stock") {
+            this.#validateNumberField(field, product);
+          }
+        } else {
+          throw new Error("Product field not valid");
+        }
+      });
+
+      const productToUpdate = await this.dao.updateProduct(id, product);
+
+      return productToUpdate;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async deleteProduct(id) {
+    try {
+      const deletedProduct = await this.dao.deleteProduct(id);
+      return deletedProduct;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 }

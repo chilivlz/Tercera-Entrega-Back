@@ -4,12 +4,13 @@ class ProductsController {
 
   async getAll(req, res) {
     // Crear una instancia de la clase
-      const allProducts = await productService.getProducts(
-        req.query.limit,
-        req.query.page,
-        req.query.sort,
-        req.query.query 
-      );
+    const allProducts = await productService.getProducts({
+      limit: req.query.limit,
+      page: req.query.page,
+      sort: req.query.sort,
+      query: req.query.query 
+    });
+    
 
       let sessionDataName = req.session.user?.firstName;
       let sessionAuth = req.session.rol;

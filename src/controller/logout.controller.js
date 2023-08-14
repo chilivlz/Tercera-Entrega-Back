@@ -4,7 +4,7 @@ class LogoutController{
         if (err) {
           return res.json({ status: "Logout error", body: err });
         }
-        res.render("login");
+        return res.redirect("login");
       });
 
    }

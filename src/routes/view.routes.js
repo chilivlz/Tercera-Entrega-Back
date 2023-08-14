@@ -52,7 +52,9 @@ viewsRouter.post("/register", passport.authenticate("register", {failureRedirect
 
 viewsRouter.get("/login", loginController.get);
 viewsRouter.get("/!login", loginController.getFail);
+viewsRouter.get("/current", loginController.getCurrentUser);
 viewsRouter.post( "/login", passport.authenticate("login", {failureRedirect: "api/sessions/failregister",}),loginController.post)
+
 //........................ SESSION............................//
 
 viewsRouter.get("/session", sessionController.getSe)

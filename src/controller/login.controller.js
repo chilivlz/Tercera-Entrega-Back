@@ -1,3 +1,5 @@
+import { userDto } from "../DAO/DTO/user.dto.js";
+
 class LogInController {
 
   async get (req,res){
@@ -24,6 +26,15 @@ class LogInController {
     };
     return res.redirect("/products");
   }
+
+  async getCurrentUser(req, res) {
+    if (!req.session.user) {
+      return res.json({ error: "invalid credentials" });
+    }
+    const user = userDto(req.session.user);
+    return res.json(user);
+  }
+
 }
 
 export const loginController = new LogInController();

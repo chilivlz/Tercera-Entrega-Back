@@ -57,7 +57,7 @@ app.use( express.static(__dirname +"/public"));
 
 app.use("/", viewsRouter)
 
-socketServer.on("connection", async (socket) => {
+/*socketServer.on("connection", async (socket) => {
   console.log("New Client connected");
   const products = await productManager.getProducts();
   socket.emit("products", products);
@@ -75,7 +75,7 @@ socketServer.on("connection", async (socket) => {
     const msgs = await MsgModel.find({});
     socketServer.sockets.emit("all_msgs", msgs);
   });
-});
+});*/
 
 initializePassport();
 app.use(passport.initialize());
@@ -87,14 +87,14 @@ app.use("/api/products", productManagerRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/sessions", viewsRouter); // aca modifique la ruta//
 
-app.use("/api/sessions/current", (req,res)=>{   
+/*app.use("/api/sessions/current", (req,res)=>{   
   console.log(req.session.user)  
   return res.status(200).json({
     status: "sucess",
     msg: "User data session",
     payload: req.session.user || {},
   });
-});
+});*/
 
 app.get("*", (req, res) => {
   res.status(404).send({ status: "error", data: "Page not found" });

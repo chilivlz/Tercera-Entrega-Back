@@ -11,4 +11,12 @@ export function checkUser(req, res, next) {
     }
     return res.status(401).send("Unauthorized");
   }
+
+  export function checkOwner(req, res, next) {
+    console.log("SESION", req.session);
+    if (req.session.user && req.session.user.cart === req.params.cid) {
+      return next();
+    }
+    return res.status(401).send("Not your cart");
+  }
   
