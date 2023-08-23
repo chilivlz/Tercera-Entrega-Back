@@ -13,12 +13,13 @@ class ProductsController {
     
 
       let sessionDataName = req.session.user?.firstName;
-      let sessionAuth = req.session.rol;
-      if (sessionAuth) {
-        sessionAuth = "Admin";
-      } else {
-        sessionAuth = "User";
+      let sessionAuth = req.session.user?.rol;
+      let isAdmin = false;
+      if (req.session.user?.rol === "admin") {
+        isAdmin = true;
       }
+       
+      
       const products = allProducts.docs.map((product) => ({
         name: product.title,
         description: product.description,

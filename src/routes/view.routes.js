@@ -1,7 +1,7 @@
 import express from "express";
 import passport from "passport"
 import { Router } from "express";
-import { checkAdmin, checkUser } from "../middlewares/auth.js";
+import {   checkUser } from "../middlewares/auth.js";
 import { productsController } from "../controller/products.controller.js";
 import { cartsController } from "../controller/cart.controllet.js";
 import { registerController } from "../controller/register.controller.js";
@@ -16,6 +16,7 @@ import { viewrouterController } from "../controller/viewRouter.controller.js";
 //const cartManagerMongo = new CartManagerMongo();
 
 export const viewsRouter = Router();
+
 
 viewsRouter.use(express.json());
 viewsRouter.use(express.urlencoded({ extended: true }));
@@ -67,7 +68,9 @@ viewsRouter.get("/logout", logoutController.get)
 
 //.......................... CHAT.............................//
 
-viewsRouter.get("/chat",chatController.get);
+viewsRouter.get("/chat",chatController.get, async (req, res) => {
+  res.render("chat", {});
+});;
 
 //.............................PROFILE.........................//
 

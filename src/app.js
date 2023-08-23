@@ -96,6 +96,37 @@ app.use("/api/sessions", viewsRouter); // aca modifique la ruta//
   });
 });*/
 
+app.get("/mockingproducts", (req, res) => {
+  const products = [];
+  for (let i = 0; i < 100; i++) {
+    products.push({
+      _id: `6483de46fc7349e7c00e547${i}`,
+      title: `Mock ${i}`,
+      description: `Mock desc ${i}`,
+      price: 100 * i,
+      thumbnail: `/img${i}.png`,
+      code: `abc${i}`,
+      stock: 5,
+      status: true,
+      category: `Mock`,
+      __v: 0,
+    });
+  }
+  return res.status(200).json({
+    status: "success",
+    msg: "Products created",
+    docs: products,
+  });
+});
+
+app.get("*", (req, res) => {
+  return res.status(404).json({
+    status: "error",
+    msg: "Route not found",
+    data: {},
+  });
+});
+
 app.get("*", (req, res) => {
   res.status(404).send({ status: "error", data: "Page not found" });
 });
