@@ -17,6 +17,7 @@ export class UserService {
       const updatedUser = await this.dao.updateUser(id, userToReplace);
       return updatedUser;
     }
+    
   
     async deleteUser(id) {
       const deletedUser = await this.dao.deleteUser(id);

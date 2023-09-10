@@ -6,7 +6,7 @@ import { cartsRouter } from "./routes/carts.routes.js";
 import { productManagerRouter } from "./routes/products.routes.js";
 import {viewsRouter} from "./routes/view.routes.js";
 //import { ProductManagerMongo } from "./services/products.service.js";
-import { MsgModel } from "./DAO/mongo/models/msgs.model.js";
+//import { MsgModel } from "./DAO/mongo/models/msgs.model.js";//
 import {__dirname} from "./utils.js"
 import http from 'http'
 import { connectMongo } from "./utils/connect-db.js";
@@ -15,11 +15,18 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 import { initializePassport } from "./config/passport.config.js";
 import passport from "passport";
+import errorHandler from "./middlewares/error.js"
 import { ent } from "./config.js";
+import { addLogger } from "./middlewares/logger.js";
+import { userModel } from "./DAO/mongo/models/users.model.js";
+import bcrypt from "bcrypt";
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUiExpress from "swagger-ui-express";
+
 
 
 const app = express();
-const port = ent.PORT;
+
 
 app.use(cookieParser());
 app.use(
@@ -31,7 +38,7 @@ app.use(
   })
 );
 
-
+const port = ent.PORT;
 connectMongo();
 
 const server = http.createServer(app);
@@ -40,6 +47,20 @@ export const io = new Server (server);
 
 app.use(express.urlencoded({ extended: true }));
 //const productManager = new ProductManagerMongo();
+
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.1",
+    info: {
+      title: "Ecommerce CoderHouse Backend",
+      description: "Practica de backend de Ecommerce",
+    },
+  },
+  apis: [`${__dirname}/docs/**/*.yaml`],
+};
+
+const specs = swaggerJsdoc(swaggerOptions);
+app.use("/apidocs", swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 
 const httpServer = app.listen(port, () => {
   console.log(`Server running on port http://localhost:${port}`);
@@ -56,6 +77,24 @@ app.set("view engine", "handlebars");
 app.use( express.static(__dirname +"/public"));
 
 app.use("/", viewsRouter)
+app.use(addLogger);
+
+app.post("/recover-pass", async (req, res) => {
+  const { code, email, password } = req.body;
+  const findRecoverCode = await RecoverCodesSchema.findOne({ email, code });
+  if (Date.now() < findRecoverCode.expire) {
+    const findUser = await userModel.findOne({ email });
+    if (findUser) {
+      const newPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+      const updatedUser = await userModel.findOneAndUpdate({
+        password: newPassword,
+      });
+      res.send("Password updated");
+    }
+  } else {
+    res.send("Codigo expirado");
+  }
+});
 
 /*socketServer.on("connection", async (socket) => {
   console.log("New Client connected");
@@ -87,15 +126,6 @@ app.use("/api/products", productManagerRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/sessions", viewsRouter); // aca modifique la ruta//
 
-/*app.use("/api/sessions/current", (req,res)=>{   
-  console.log(req.session.user)  
-  return res.status(200).json({
-    status: "sucess",
-    msg: "User data session",
-    payload: req.session.user || {},
-  });
-});*/
-
 app.get("/mockingproducts", (req, res) => {
   const products = [];
   for (let i = 0; i < 100; i++) {
@@ -119,18 +149,31 @@ app.get("/mockingproducts", (req, res) => {
   });
 });
 
-app.get("*", (req, res) => {
-  return res.status(404).json({
-    status: "error",
-    msg: "Route not found",
-    data: {},
+/*app.use("/api/sessions/current", (req,res)=>{   
+  console.log(req.session.user)  
+  return res.status(200).json({
+    status: "sucess",
+    msg: "User data session",
+    payload: req.session.user || {},
   });
+});*/
+
+app.get("/loggerTest", (req, res) => {
+  req.logger.debug("debug alert!!");
+  req.logger.http("http alert!!");
+  req.logger.info("info alert!!");
+  req.logger.warning("warning alert!!!");
+  req.logger.error("error alert!!!");
+  req.logger.fatal("fatal error!!");
+  res.send({ message: "test logger" });
 });
 
 app.get("*", (req, res) => {
   res.status(404).send({ status: "error", data: "Page not found" });
 });
+app.use(errorHandler);
 
+//app.use(errorHandler);//
 
 
 

@@ -137,7 +137,7 @@ export class CartService {
         quantity.quantity === null ||
         quantity.quantity === undefined ||
         typeof quantity.quantity === "string"
-      ) {
+      ) {CustomError.createError
         CustomError.createError({
           name: "Cart error",
           cause: `Cart quantity error, ${quantity.quantity}`,
