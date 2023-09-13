@@ -79,22 +79,7 @@ app.use( express.static(__dirname +"/public"));
 app.use("/", viewsRouter)
 app.use(addLogger);
 
-app.post("/recover-pass", async (req, res) => {
-  const { code, email, password } = req.body;
-  const findRecoverCode = await RecoverCodesSchema.findOne({ email, code });
-  if (Date.now() < findRecoverCode.expire) {
-    const findUser = await userModel.findOne({ email });
-    if (findUser) {
-      const newPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-      const updatedUser = await userModel.findOneAndUpdate({
-        password: newPassword,
-      });
-      res.send("Password updated");
-    }
-  } else {
-    res.send("Codigo expirado");
-  }
-});
+
 
 /*socketServer.on("connection", async (socket) => {
   console.log("New Client connected");
@@ -120,8 +105,30 @@ initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.get("/recover-form", async (req, res) => {
+  res.render("recover-form");
+});
+
+app.post("/recover-pass", async (req, res) => {
+  const { code, email, password } = req.body;
+  const findRecoverCode = await RecoverCodesSchema.findOne({ email, code });
+  if (Date.now() < findRecoverCode.expire) {
+    const findUser = await userModel.findOne({ email });
+    if (findUser) {
+      const newPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+      const updatedUser = await userModel.findOneAndUpdate({
+        password: newPassword,
+      });
+      res.send("Password updated");
+    }
+  } else {
+    res.send("Codigo expirado");
+  }
+});
 
 
+
+  
 app.use("/api/products", productManagerRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/sessions", viewsRouter); // aca modifique la ruta//
@@ -148,6 +155,7 @@ app.get("/mockingproducts", (req, res) => {
     docs: products,
   });
 });
+
 
 /*app.use("/api/sessions/current", (req,res)=>{   
   console.log(req.session.user)  
