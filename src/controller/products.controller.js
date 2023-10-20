@@ -1,4 +1,5 @@
 import { productService } from "../services/routers.js";
+import { cartService } from "../services/routers.js";
 
 class ProductsController {
 
@@ -28,7 +29,7 @@ class ProductsController {
       }));
 
       res.render("products", {
-        style: "/public/css/styles.css",
+        style: "../css/styles.css",
         products: products,
         pagingCounter: allProducts.pagingCounter,
         page: allProducts.page,
@@ -44,9 +45,9 @@ class ProductsController {
       });
     } 
 
-    async getOne(res,req){
+    async getOne(req,res,){
       let pId = req.params.pid;
-      const product = await productManagerMongo.getProductById(pId);
+      const product = await productService.getProductById(pId);
     
       if (product) {
         return res.render("productDetail", {

@@ -4,33 +4,38 @@
   <a href="/logout" class="logOut">LogOut</a>
 
   <div class="shop">
-{{#each products}}
-  <div class='cardList'>
-    
-      <div class='card'>
-        <h3 class='productTitle'>{{this.name}}</h3>
-        <ul style='list-style: none;'>
-          <li class='productDescription'>{{this.description}}</li>
-          <li class='productPrice'>{{this.price}}$</li>
-        </ul>
-        <div class='addToCart'>
-          <button class='addToCart-btn' data-product-id='{{this._id}}'>Add to cart</button>
-        </div>
+    {{#each products}}
+  <div class="containers">
+        <p>Name: {{this.name}}</p>
+
+        <p>Description: {{this.description}}</p>
+
+        <p>Price: {{this.price}}</p>
+
+        <button>Add To pouch</button>
+
+        <a href="http://localhost:8080/productDetail/{{this._id}}">More Details</a>
+
       </div>
     {{/each}}
   </div>
-</div>
-<div id='pagination' class="botonera">
-  {{#if hasPrevPage}}
-    <a href={{prevPage}}><ion-icon name='chevron-back-outline'></ion-icon></a>
-  {{/if}}
-  <select name='pageSelector' id='paageSelect' class='page-select'>
-    {{#each totalPages}}
-      <option value='{{this}}'>{{this}}</option>
-    {{/each}}
-  </select>
-  {{#if hasNextPage}}
-    <a href={{nextPage}}><ion-icon name='chevron-forward-outline'></ion-icon></a>
-  {{/if}}
-</div>
 
+  <div class="botonera">
+    {{this.pagingCounter}}
+    {{totalPages}}
+
+    <hr />
+    <hr />
+
+    {{prevPage}}
+    {{#if hasPrevPage}}
+      <a href="http://localhost:8080/products/?page={{prevPage}}" class="previousPage">⬅️</a>
+    {{/if}}
+    {{page}}
+    {{#if hasNextPage}}
+      <a href="http://localhost:8080/products/?page={{nextPage}}" class="nextPage">➡️</a>
+    {{/if}}
+    {{nextPage}}
+  </div>
+
+</div>

@@ -1,13 +1,15 @@
+// RECUERDA SUBIRLO A PRODUCCION.
+
+
 
 import express from "express";
 import handlesbars from "express-handlebars";
-import { Server } from "socket.io";
-import { cartsRouter } from "./routes/carts.routes.js";
+import {__dirname} from "./utils.js";
 import { productManagerRouter } from "./routes/products.routes.js";
+import { cartsRouter } from "./routes/carts.routes.js";
 import {viewsRouter} from "./routes/view.routes.js";
-//import { ProductManagerMongo } from "./services/products.service.js";
-//import { MsgModel } from "./DAO/mongo/models/msgs.model.js";//
-import {__dirname} from "./utils.js"
+import { Server } from "socket.io";
+//import { MsgModel } from "./DAO/mongo/models/msgs.model.js";
 import http from 'http'
 import { connectMongo } from "./utils/connect-db.js";
 import cookieParser from "cookie-parser";
@@ -18,10 +20,15 @@ import passport from "passport";
 import errorHandler from "./middlewares/error.js"
 import { ent } from "./config.js";
 import { addLogger } from "./middlewares/logger.js";
+import { sendEmailTransport } from "./utils.js";
+import crypto from "crypto";
+import { RecoverCodesSchema } from "./DAO/mongo/models/recover-codes.js";
 import { userModel } from "./DAO/mongo/models/users.model.js";
 import bcrypt from "bcrypt";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express";
+import { productService } from "./services/routers.js";
+
 
 
 
@@ -83,14 +90,14 @@ app.use(addLogger);
 
 /*socketServer.on("connection", async (socket) => {
   console.log("New Client connected");
-  const products = await productManager.getProducts();
+  const products = await productService.getProducts();
   socket.emit("products", products);
   const msgs = await MsgModel.find({});
   socketServer.sockets.emit("all_msgs", msgs);
 
   socket.on("formSubmission", async (data) => {
-    await productManager.addProduct(data); 
-    const products = await productManager.getProducts();
+    await productService.addProduct(data); 
+    const products = await productService.getProducts();
     socketServer.sockets.emit("products", products);
   });
 
@@ -109,6 +116,35 @@ app.get("/recover-form", async (req, res) => {
   res.render("recover-form");
 });
 
+app.post("/recover-form", async (req, res) => {
+  const code = crypto.randomBytes(16).toString("hex");
+  const { email } = req.body;
+  const createRecoverCode = await RecoverCodesSchema.create({
+    email,
+    code,
+    expire: Date.now() + 1 * 60 * 60 * 1000,
+  });
+
+  const result = await sendEmailTransport.sendMail({
+    from: process.env.GOOGLE_EMAIL,
+    to: email,
+    subject: "Recuperar contraseña",
+    html: `<a href="http://localhost:8080/recover-pass?code=${code}&email=${email}"> Tu codigo: ${code} </a>`,
+  });
+
+  res.send("Email sent, check your inbox");
+});
+
+app.get("/recover-pass", async (req, res) => {
+  const { code, email } = req.query;
+  const findRecoverCode = await RecoverCodesSchema.findOne({ email, code });
+  if (Date.now() < findRecoverCode.expire) {
+    res.render("recover-pass");
+  } else {
+    res.send("Codigo expirado")
+  }
+});
+// necesito corregir esto//
 app.post("/recover-pass", async (req, res) => {
   const { code, email, password } = req.body;
   const findRecoverCode = await RecoverCodesSchema.findOne({ email, code });
@@ -125,7 +161,6 @@ app.post("/recover-pass", async (req, res) => {
     res.send("Codigo expirado");
   }
 });
-
 
 
   
@@ -157,14 +192,6 @@ app.get("/mockingproducts", (req, res) => {
 });
 
 
-/*app.use("/api/sessions/current", (req,res)=>{   
-  console.log(req.session.user)  
-  return res.status(200).json({
-    status: "sucess",
-    msg: "User data session",
-    payload: req.session.user || {},
-  });
-});*/
 
 app.get("/loggerTest", (req, res) => {
   req.logger.debug("debug alert!!");
@@ -177,11 +204,19 @@ app.get("/loggerTest", (req, res) => {
 });
 
 app.get("*", (req, res) => {
+  return res.status(404).json({
+    status: "error",
+    msg: "Route not found",
+    data: {},
+  });
+});
+
+app.get("*", (req, res) => {
   res.status(404).send({ status: "error", data: "Page not found" });
 });
+
 app.use(errorHandler);
 
-//app.use(errorHandler);//
 
 
 

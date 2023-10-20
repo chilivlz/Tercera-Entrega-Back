@@ -1,11 +1,18 @@
 import { fileURLToPath } from "url";
 import { dirname } from "path"; 
-import winston from "winston"
-//import config from "./config.js"
 export const __filename = fileURLToPath(import.meta.url);
 export const __dirname = dirname(__filename);
-
+import bcrypt from "bcrypt";
+import winston from "winston";
+import nodemailer from "nodemailer";
 export default __dirname;
+
+export const createHash = (password) =>
+  bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+
+export const isValidPassword = (password, hashPassword) =>
+  bcrypt.compareSync(password, hashPassword);
+
 
 const customLevelsOptions = {
     levels: {
@@ -44,6 +51,17 @@ const customLevelsOptions = {
       }),
     ],
   });
+
+
+  export const sendEmailTransport = nodemailer.createTransport({
+    service: "gmail",
+    port: 587,
+    auth: {
+      user: process.env.GOOGLE_EMAIL,
+      pass: process.env.GOOGLE_PASS,
+    },
+  });
+  
 
 
 

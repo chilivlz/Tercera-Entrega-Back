@@ -1,4 +1,4 @@
-import { productsModel } from "../Implementacion-login/src/DAO/models/products.model.js";
+import { productsModel } from "../services/routers.js";
 
 export class ProductManager {
   constructor() {}

@@ -9,7 +9,7 @@ body {
     align-items: center;
     flex-direction: column;
     justify-content: center;
-    background-image: url(https://res.cloudinary.com/dyshyq2vl/image/upload/v1687028287/wiebke-scholz-sts-between-worlds-bg01_kzhv7k.jpg);
+    background-image: url(https://res.cloudinary.com/dz0uwxeqq/image/upload/v1697834031/omgttx7y93iz4danl7vk.jpg);
     background-size: cover;
 }
 
@@ -19,7 +19,6 @@ body {
     flex-direction: column;
     justify-content: center;
 }
-
 
 h1 {
     text-align: center;
@@ -34,7 +33,7 @@ h1 {
 }
 
 .containers {
-    background-image: url(https://res.cloudinary.com/dyshyq2vl/image/upload/v1687028449/pxfuel_i5rjsp.jpg);
+    background-image: url(https://res.cloudinary.com/dz0uwxeqq/image/upload/v1697834031/omgttx7y93iz4danl7vk.jpg);
     background-size: cover;
     padding: 50px;
     border-radius: 5px;
@@ -51,7 +50,7 @@ h1 {
     color: black;
     text-shadow: 3px 3px 3px white;
     font-size: 1.3rem;
-    font-family: Helvetica, sans-serif;
+    font-family: sans-serif;
     font-weight: bold;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -79,4 +78,19 @@ a {
     box-shadow: -8px 10px 12px -6px rgba(255, 255, 255, 0.856);
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.597);
+}
+
+.logOut {
+    border-radius: 10px;
+    background-color: white;
+    padding: 15px 25px;
+    margin-bottom: 15px;
+    text-decoration: none;
+    color: black;
+}
+
+.logOut:hover {
+    transform: scale(1.05);
+    transition: all 0.5s ease-in-out;
+    font-weight: bold;
 }
