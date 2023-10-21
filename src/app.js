@@ -27,6 +27,7 @@ import { userModel } from "./DAO/mongo/models/users.model.js";
 import bcrypt from "bcrypt";
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUiExpress from "swagger-ui-express";
+import { usersRouter } from "./routes/users.routes.js"
 import { productService } from "./services/routers.js";
 
 
@@ -166,7 +167,8 @@ app.post("/recover-pass", async (req, res) => {
   
 app.use("/api/products", productManagerRouter);
 app.use("/api/carts", cartsRouter);
-app.use("/api/sessions", viewsRouter); // aca modifique la ruta//
+app.use("/api/sessions", viewsRouter);
+app.use("/api/users", usersRouter); // aca modifique la ruta//
 
 app.get("/mockingproducts", (req, res) => {
   const products = [];

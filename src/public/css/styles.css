@@ -94,3 +94,101 @@ a {
     transition: all 0.5s ease-in-out;
     font-weight: bold;
 }
+
+label {
+    font-weight: bold;
+    font-size: x-large;
+}
+
+.register-form {
+    margin-top: 25px;
+    width: 100%;
+    max-width: 400px;
+    gap: 15px;
+    padding: 25px;
+    border: solid white 2px;
+    border-radius: 15px;
+}
+
+.register-form input {
+    width: 100%;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.register-form button {
+    padding: 10px 15px;
+    background-color: goldenrod;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.register-form button:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: ease 0.5s;
+    font-weight: bolder;
+}
+
+.separator {
+    margin: 25px 0px;
+    width: 100%;
+}
+
+.ahac {
+    text-decoration: underline;
+    color: white;
+    margin: 15px;
+}
+
+.ahac:hover {
+    color: grey;
+    transition: ease 0.2s;
+}
+
+.login-form {
+    width: 100%;
+    max-width: 400px;
+    gap: 15px;
+    padding: 25px;
+    border: solid white 2px;
+    border-radius: 15px;
+    margin-top: 25px;
+}
+
+.login-form button:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: ease 0.5s;
+    font-weight: bolder;
+}
+
+.login-form button {
+    padding: 10px 15px;
+    background-color: goldenrod;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.login-form input {
+    width: 100%;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.git-button {
+    padding: 10px 20px;
+    border-radius: 15px;
+    border: solid 2px white;
+    background-color: goldenrod;
+    font-weight: bold;
+}
+
+.git-button:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: ease 0.5s;
+    font-weight: bolder;
+}

@@ -45,6 +45,8 @@ class ProductsController {
       });
     } 
 
+    
+
     async getOne(req,res,){
       let pId = req.params.pid;
       const product = await productService.getProductById(pId);

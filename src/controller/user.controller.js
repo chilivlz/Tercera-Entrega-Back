@@ -1,3 +1,6 @@
+import {userService} from "../services/routers.js"
+import {userDto} from "../DAO/DTO/user.dto.js"
+
 class UserController{
     async getUser(req,res){
         try {
@@ -48,14 +51,41 @@ class UserController{
                  res.send({ status: "success", payload: result });
             }
 
+            async deleteInactiveUsers(req, res, next) {
+              try {
+                const users = await userService.deleteInactiveUsers();
+          
+                return res.status(201).json({
+                  status: "success",
+                  msg: "Inactive users deleted successfully",
+                  payload: users,
+                });
+              } catch (error) {
+                next(error);
+              }
+            }
+
             async deleteUser (req,res){
                 let { uid } = req.params;
                 let result = await UserModel.deleteOne({ _id: uid });
                 res.send({ status: "success, payload: result" });
               };
 
-            
+
+              async toggleUserRole(req, res, next) {
+                try {
+                  let { uid } = req.params;
+                  let result = await userService.toggleUserRole(uid);
+                  res.send({ status: "success", payload: result });
+                } catch (error) {
+                  next(error);
+                }
+              }
             }
+            
+
+            
+          
 
             export const usercontroler = new UserController();
 

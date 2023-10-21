@@ -18,20 +18,3 @@ export const generateProductErrorInfo = (product) => {
       Hubo un error en la base de datos o no esta logeado. Intente mas tarde o registrese.
     `;
   };
-  
-  /*const product = {
-    name: 'Producto A',
-    description: 'Descripción del Producto A',
-    price: 100,
-    stock: 10,
-    thumbnail: 'url_del_thumbnail',
-    status: true,
-    code: 'ABC123',
-    category: 'Categoría del Producto A'
-  };
-  
-  const productErrorInfo = generateProductErrorInfo(product);
-  console.log(productErrorInfo);
-  
-  const databaseErrorInfo = generateDatabaseErrorInfo();
-  console.log(databaseErrorInfo);*/

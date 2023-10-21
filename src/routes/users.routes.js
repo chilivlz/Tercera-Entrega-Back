@@ -1,10 +1,11 @@
 //Arreglar esto//
 
+//Arreglar esto//
+
 import { Router } from "express";
-import { use } from "passport";
+import { checkAdmin } from "../middlewares/auth.js";
 import { usercontroler } from "../controller/user.controller.js";
-import { UserModel } from "../DAO/mongo/models/users.moongose.js";
-const express = require("express");
+import express from "express";
 
 export const usersRouter = Router();
 
@@ -20,5 +21,8 @@ usersRouter.post("/", usercontroler.postUser);
 usersRouter.put("/:uid", usercontroler.putUser);
 
 usersRouter.delete("/:uid", usercontroler.deleteUser)
+
+usersRouter.put("/premium/:uid", checkAdmin, usercontroler.toggleUserRole);
+
 
 

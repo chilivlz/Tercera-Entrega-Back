@@ -19,6 +19,25 @@ class ViewrouterController{
             products: products,
           });
         };
+
+        async getUsers(req, res, next) {
+          try {
+            const allUsers = await userService.getAllUsers();
+      
+            res.status(200).render("users", {
+              u: allUsers.map((user) => ({
+                firstName: user.firstName,
+                lastName: user.lastName,
+                rol: user.rol,
+                id: user._id,
+              })),
+            });
+          } catch (error) {
+            next(error);
+          }
+        }
     }
+
+    
 
     export  const viewrouterController = new ViewrouterController();
